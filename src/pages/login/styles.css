@@ -1,0 +1,85 @@
+.app {
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  height: 100vh;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  background-image: url("../../assets//backgroundlogin.avif");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.input-normal {
+  height: 50px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.input-submit {
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #0411cc;
+  border: 1px solid #01d28e;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+input[type="submit"]:hover {
+  background: #5b0483;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px;
+}
+
+.login-form {
+  background-color: white;
+  padding: 2rem;
+  width: 30%;
+  border-radius: 10px;
+}
+
+.list-container {
+  display: flex;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.logo {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+}
+.link-sign-up-container {
+  margin: 10px;
+  display: flex;
+  justify-content: right;
+  color: #2804ac;
+  font-weight: 20px;
+}
+
+.link-sign-up:hover {
+  color: #5b0483;
+  cursor: pointer;
+}
