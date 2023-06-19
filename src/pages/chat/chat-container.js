@@ -48,6 +48,14 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
     setShow(true);
   };
 
+  const handleCallButton = () => {
+    const url =
+      window.location.protocol + "//" + window.location.host + "/room";
+    console.log(window.location.protocol);
+    console.log(url);
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
   useEffect(() => {
     socket.on("new-message-chat-container", (data) => {
       if (data.chooseId == chooseId && isGroup == data.isGroup) {
@@ -201,7 +209,11 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
             {isGroup && (
               <BsPersonFillAdd size={30} color="#6ea9d7" onClick={handleShow} />
             )}
-            <VoiceCallButton />
+            <VoiceCallButton
+              onClick={() => {
+                handleCallButton();
+              }}
+            />
             <VideoCallButton />
             <EllipsisButton orientation="vertical" />
           </ConversationHeader.Actions>

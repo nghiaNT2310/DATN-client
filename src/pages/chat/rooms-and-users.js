@@ -6,7 +6,7 @@ import {
   Search,
   Sidebar,
 } from "@chatscope/chat-ui-kit-react";
-import Grid from "@mui/material/Grid";
+import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
