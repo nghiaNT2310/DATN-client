@@ -15,10 +15,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import dateHelper from "../../util/date";
+
 import {
   AiOutlineBell,
   AiOutlineSetting,
   AiOutlineLogout,
+  AiOutlineMessage,
 } from "react-icons/ai";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -147,6 +150,25 @@ const LeftSideBar = ({
     }
   };
 
+  const changeAvatar = async (e) => {
+    console.log(e.target.value);
+    let data = new FormData();
+    const file = e.target.files[0];
+    data.append("image", file);
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "http://localhost:5000/avatar",
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+      data: data,
+    };
+    console.log("before");
+    const response = await axios.request(config);
+    console.log("------", response);
+  };
+
   return (
     <Sidebar position="left" scrollable={true}>
       <div
@@ -166,15 +188,27 @@ const LeftSideBar = ({
             justifyContent: "space-between",
           }}
         >
-          <Avatar
-            style={{
-              marginRight: "1em",
-            }}
-            src={avatar}
-            name="Emily"
-            status="available"
-            size="md"
-          />
+          <div>
+            <label for="file-input">
+              <Avatar
+                style={{
+                  marginRight: "1em",
+                }}
+                src={avatar}
+                name="Emily"
+                status="available"
+                size="md"
+              />
+            </label>
+
+            <input
+              id="file-input"
+              type="file"
+              style={{ display: "none" }}
+              onChange={changeAvatar}
+            />
+          </div>
+
           <div>{user.username}</div>
         </div>
 
@@ -186,23 +220,36 @@ const LeftSideBar = ({
             justifyContent: "space-between",
           }}
         >
+          {isNotification && (
+            <div>
+              <AiOutlineMessage
+                size={30}
+                color="#6ea9d7"
+                onClick={() => {
+                  setIsNotification(!isNotification);
+                }}
+              />
+            </div>
+          )}
           <div>
-            <AiOutlineBell
-              size="20px"
-              color="gray"
-              onClick={() => {
-                setIsNotification(!isNotification);
-              }}
-            />
+            {!isNotification && (
+              <AiOutlineBell
+                size={30}
+                color="#6ea9d7"
+                onClick={() => {
+                  setIsNotification(!isNotification);
+                }}
+              />
+            )}
           </div>
           <div>
             <AiOutlineLogout
+              size={30}
+              color="#6ea9d7"
               onClick={() => {
                 localStorage.removeItem("token");
                 navigate("/", { replace: true });
               }}
-              size="20px"
-              color="gray"
             />
           </div>
         </div>
@@ -252,7 +299,12 @@ const LeftSideBar = ({
                   name={element.name}
                   lastSenderName={element.lastSenderName}
                   info={element.message}
-                  onClick={(e) => {
+                  lastActivityTime={
+                    element.createdAt
+                      ? dateHelper.formatTimeToHM(element.createdAt)
+                      : dateHelper.formatTimeToHM(element.establishAt)
+                  }
+                  onClick={async (e) => {
                     setChooseId(element.id);
                     setIsGroup(element.isGroup);
                   }}

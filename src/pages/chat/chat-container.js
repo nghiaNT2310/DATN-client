@@ -17,6 +17,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
+import dateHelper from "../../util/date";
 
 const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
   const [messageInputValue, setMessageInputValue] = useState("");
@@ -48,11 +49,21 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
     setShow(true);
   };
 
-  const handleCallButton = () => {
-    const url =
-      window.location.protocol + "//" + window.location.host + "/room";
-    console.log(window.location.protocol);
-    console.log(url);
+  const handleCallButton = async () => {
+    let roomId;
+    if (isGroup) {
+      roomId = chooseId;
+    } else {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: `http://localhost:5000/friend?id1=${user._id}&id2=${chooseId}`,
+        headers: {},
+      };
+      const friendId = await axios.request(config);
+      roomId = friendId.data;
+    }
+    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${roomId}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -197,116 +208,120 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <ChatContainer>
-        <ConversationHeader>
-          <ConversationHeader.Back />
-          <Avatar src={avatar} name="Zoe" />
-          <ConversationHeader.Content
-            userName="Zoe"
-            info="Active 10 mins ago"
-          />
-          <ConversationHeader.Actions>
-            {isGroup && (
-              <BsPersonFillAdd size={30} color="#6ea9d7" onClick={handleShow} />
-            )}
-            <VoiceCallButton
-              onClick={() => {
-                handleCallButton();
-              }}
+      {chooseId && (
+        <ChatContainer>
+          <ConversationHeader>
+            <ConversationHeader.Back />
+            <Avatar src={avatar} name="Zoe" />
+            <ConversationHeader.Content
+              userName="Zoe"
+              info="Active 10 mins ago"
             />
-            <VideoCallButton />
-            <EllipsisButton orientation="vertical" />
-          </ConversationHeader.Actions>
-        </ConversationHeader>
-        <MessageList
-          style={{
-            height: "570px",
-            overflow: "scroll",
-          }}
-        >
-          {messages.map((element, index) => {
-            if (element.creator == user.username) {
-              if (
-                index == messages.length - 1 ||
-                element.creator != messages[index + 1].creator
-              ) {
-                return (
-                  <Message
-                    model={{
-                      message: element.messageBody,
-                      sentTime: "15 mins ago",
-                      sender: element.creator,
-                      direction: "outgoing",
-                      position: "single",
-                    }}
-                  >
-                    <Message.Footer
-                      sender={element.creator}
-                      sentTime={element.createdAt}
+            <ConversationHeader.Actions>
+              {isGroup && (
+                <BsPersonFillAdd
+                  size={30}
+                  color="#6ea9d7"
+                  onClick={handleShow}
+                />
+              )}
+              <VoiceCallButton
+                onClick={() => {
+                  handleCallButton();
+                }}
+              />
+              <VideoCallButton />
+            </ConversationHeader.Actions>
+          </ConversationHeader>
+          <MessageList
+            style={{
+              height: "570px",
+              overflow: "scroll",
+            }}
+          >
+            {messages.map((element, index) => {
+              if (element.creator == user.username) {
+                if (
+                  index == messages.length - 1 ||
+                  element.creator != messages[index + 1].creator
+                ) {
+                  return (
+                    <Message
+                      model={{
+                        message: element.messageBody,
+                        sentTime: "15 mins ago",
+                        sender: element.creator,
+                        direction: "outgoing",
+                        position: "single",
+                      }}
+                    >
+                      <Message.Footer
+                        sender={element.creator}
+                        sentTime={dateHelper.formatTime(element.createdAt)}
+                      />
+                    </Message>
+                  );
+                } else {
+                  return (
+                    <Message
+                      model={{
+                        message: element.messageBody,
+                        sentTime: "15 mins ago",
+                        sender: element.creator,
+                        direction: "outgoing",
+                        position: "single",
+                      }}
                     />
-                  </Message>
-                );
+                  );
+                }
               } else {
-                return (
-                  <Message
-                    model={{
-                      message: element.messageBody,
-                      sentTime: "15 mins ago",
-                      sender: element.creator,
-                      direction: "outgoing",
-                      position: "single",
-                    }}
-                    avatarSpacer
-                  />
-                );
-              }
-            } else {
-              if (
-                index == messages.length - 1 ||
-                element.creator != messages[index + 1].creator
-              ) {
-                return (
-                  <Message
-                    model={{
-                      message: element.messageBody,
-                      sentTime: "15 mins ago",
-                      sender: element.creator,
-                      direction: "incoming",
-                      position: "single",
-                    }}
-                  >
-                    <Avatar src={avatar} name="Zoe" />
-                    <Message.Footer
-                      sender={element.creator}
-                      sentTime={element.createdAt}
+                if (
+                  index == messages.length - 1 ||
+                  element.creator != messages[index + 1].creator
+                ) {
+                  return (
+                    <Message
+                      model={{
+                        message: element.messageBody,
+                        sentTime: "15 mins ago",
+                        sender: element.creator,
+                        direction: "incoming",
+                        position: "single",
+                      }}
+                    >
+                      <Avatar src={avatar} name="Zoe" />
+                      <Message.Footer
+                        sender={element.creator}
+                        sentTime={dateHelper.formatTime(element.createdAt)}
+                      />
+                    </Message>
+                  );
+                } else {
+                  return (
+                    <Message
+                      model={{
+                        message: element.messageBody,
+                        sentTime: "15 mins ago",
+                        sender: element.creator,
+                        direction: "incoming",
+                        position: "first",
+                      }}
+                      avatarSpacer
                     />
-                  </Message>
-                );
-              } else {
-                return (
-                  <Message
-                    model={{
-                      message: element.messageBody,
-                      sentTime: "15 mins ago",
-                      sender: element.creator,
-                      direction: "incoming",
-                      position: "first",
-                    }}
-                    avatarSpacer
-                  />
-                );
+                  );
+                }
               }
-            }
-          })}
-        </MessageList>
+            })}
+          </MessageList>
 
-        <MessageInput
-          placeholder="Type message here"
-          value={messageInputValue}
-          onChange={(val) => setMessageInputValue(val)}
-          onSend={handleSendMessage}
-        />
-      </ChatContainer>
+          <MessageInput
+            placeholder="Type message here"
+            value={messageInputValue}
+            onChange={(val) => setMessageInputValue(val)}
+            onSend={handleSendMessage}
+          />
+        </ChatContainer>
+      )}
     </>
   );
 };
