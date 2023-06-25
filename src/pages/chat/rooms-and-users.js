@@ -153,7 +153,12 @@ const LeftSideBar = ({
 
   const changeAvatar = async (e) => {
     const file = e.target.files[0];
-    socket.emit("update-avatar", { name: file.name, file: file, id: user._id });
+    socket.emit("update-avatar", {
+      name: file.name,
+      file: file,
+      id: user._id,
+      type: file.type,
+    });
   };
 
   return (
@@ -285,7 +290,13 @@ const LeftSideBar = ({
                 <Conversation
                   name={element.name}
                   lastSenderName={element.lastSenderName}
-                  info={element.message}
+                  info={
+                    element.subject.includes("image")
+                      ? "image"
+                      : element.subject == "text"
+                      ? element.message
+                      : "file"
+                  }
                   lastActivityTime={
                     element.createdAt
                       ? dateHelper.formatTimeToHM(element.createdAt)

@@ -322,64 +322,252 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
             }}
           >
             {messages.map((element, index) => {
+              console.log(
+                element.subject.includes("image"),
+                element.messageBody
+              );
               if (element.creator == user.username) {
                 if (
                   index == messages.length - 1 ||
                   element.creator != messages[index + 1].creator
                 ) {
-                  return (
-                    <Message
-                      model={{
-                        message: element.messageBody,
-                        sentTime: "15 mins ago",
-                        sender: element.creator,
-                        direction: "outgoing",
-                        position: "single",
-                      }}
-                    >
-                      <Message.Footer
-                        sender={element.creator}
-                        sentTime={dateHelper.formatTime(element.createdAt)}
-                      />
-                    </Message>
-                  );
+                  if (element.subject == "text") {
+                    return (
+                      <Message
+                        model={{
+                          message: element.messageBody,
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      >
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  } else if (element.subject.includes("image")) {
+                    return (
+                      <Message
+                        type="image"
+                        model={{
+                          direction: "outgoing",
+                          payload: {
+                            src: element.messageBody,
+                            alt: element.messageBody,
+                            width: "200px",
+                          },
+                        }}
+                      >
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  } else {
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent
+                          html={
+                            "<a href=" +
+                            element.messageBody +
+                            ' target="_blank" style="color:black;">' +
+                            element.messageBody +
+                            "</a>"
+                          }
+                        />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  }
                 } else {
-                  return (
-                    <Message
-                      model={{
-                        message: element.messageBody,
-                        sentTime: "15 mins ago",
-                        sender: element.creator,
-                        direction: "outgoing",
-                        position: "single",
-                      }}
-                    />
-                  );
+                  if (element.subject == "text") {
+                    return (
+                      <Message
+                        model={{
+                          message: element.messageBody,
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      />
+                    );
+                  } else if (element.subject.includes("image")) {
+                    return (
+                      <Message
+                        type="image"
+                        model={{
+                          direction: "outgoing",
+                          payload: {
+                            src: element.messageBody,
+                            alt: element.messageBody,
+                            width: "200px",
+                          },
+                        }}
+                      ></Message>
+                    );
+                  } else {
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent
+                          html={
+                            "<a href=" +
+                            element.messageBody +
+                            ' target="_blank" style="color:black;">' +
+                            element.messageBody +
+                            "</a>"
+                          }
+                        />
+                      </Message>
+                    );
+                  }
                 }
               } else {
                 if (
                   index == messages.length - 1 ||
                   element.creator != messages[index + 1].creator
                 ) {
-                  return (
-                    <Message
-                      model={{
-                        message: element.messageBody,
-                        sentTime: "15 mins ago",
-                        sender: element.creator,
-                        direction: "incoming",
-                        position: "single",
-                      }}
-                    >
-                      <Avatar src={element.avatar} name="Zoe" />
-                      <Message.Footer
-                        sender={element.creator}
-                        sentTime={dateHelper.formatTime(element.createdAt)}
-                      />
-                    </Message>
-                  );
+                  if (element.subject == "text") {
+                    return (
+                      <Message
+                        model={{
+                          message: element.messageBody,
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "single",
+                        }}
+                      >
+                        <Avatar src={element.avatar} name="Zoe" />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  } else if (element.subject.includes("image")) {
+                    return (
+                      <Message
+                        type="image"
+                        model={{
+                          direction: "incoming",
+                          payload: {
+                            src: element.messageBody,
+                            alt: element.messageBody,
+                            width: "200px",
+                          },
+                        }}
+                      >
+                        <Avatar src={element.avatar} name="Zoe" />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  } else {
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent
+                          html={
+                            "<a href=" +
+                            element.messageBody +
+                            ' target="_blank" style="color:black;">' +
+                            element.messageBody +
+                            "</a>"
+                          }
+                        />
+                        <Avatar src={element.avatar} name="Zoe" />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
+                  }
                 } else {
-                  return (
+                  if (element.subject == "text") {
+                    return (
+                      <Message
+                        model={{
+                          message: element.messageBody,
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "first",
+                        }}
+                        avatarSpacer
+                      />
+                    );
+                  } else if (element.subject.includes("image")) {
+                    return (
+                      <Message
+                        type="image"
+                        model={{
+                          direction: "incoming",
+                          payload: {
+                            src: element.messageBody,
+                            alt: element.messageBody,
+                            width: "200px",
+                          },
+                        }}
+                        avatarSpacer
+                      ></Message>
+                    );
+                  } else {
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "single",
+                        }}
+                        avatarSpacer
+                      >
+                        <Message.HtmlContent
+                          html={
+                            "<a href=" +
+                            element.messageBody +
+                            ' target="_blank" style="color:black;">' +
+                            element.messageBody +
+                            "</a>"
+                          }
+                        />
+                      </Message>
+                    );
+                  }
+
+                  {
+                    /* return (
                     <Message
                       model={{
                         message: element.messageBody,
@@ -390,7 +578,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                       }}
                       avatarSpacer
                     />
-                  );
+                  ); */
+                  }
                 }
               }
             })}
