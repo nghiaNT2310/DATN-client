@@ -11,27 +11,37 @@ const Chat = ({ socket }) => {
   const [isGroup, setIsGroup] = useState(true);
   const [user, setUser] = useState({});
 
-  useEffect(() => {
-    const getMyInfo = async () => {
-      try {
-        let config = {
-          method: "get",
-          maxBodyLength: Infinity,
-          url: "http://localhost:5000/user",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        };
+  const getMyInfo = async () => {
+    try {
+      let config = {
+        method: "get",
+        maxBodyLength: Infinity,
+        url: "http://localhost:5000/user",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
 
-        const myInfo = await axios.request(config);
-        socket.emit("register-socket-id", myInfo.data._id);
-        setUser(myInfo.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
+      const myInfo = await axios.request(config);
+      socket.emit("register-socket-id", myInfo.data._id);
+      setUser(myInfo.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
     getMyInfo();
   }, []);
+
+  useEffect(() => {
+    socket.on("update-avatar", () => {
+      getMyInfo();
+    });
+
+    return () => {
+      socket.off("update-avatar");
+    };
+  }, [socket]);
 
   return (
     <div

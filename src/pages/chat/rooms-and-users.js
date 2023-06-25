@@ -26,6 +26,7 @@ import {
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/avata.svg";
+import groupAvatar from "../../assets/group.svg";
 
 const LeftSideBar = ({
   socket,
@@ -151,22 +152,8 @@ const LeftSideBar = ({
   };
 
   const changeAvatar = async (e) => {
-    console.log(e.target.value);
-    let data = new FormData();
     const file = e.target.files[0];
-    data.append("image", file);
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "http://localhost:5000/avatar",
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-      data: data,
-    };
-    console.log("before");
-    const response = await axios.request(config);
-    console.log("------", response);
+    socket.emit("update-avatar", { name: file.name, file: file, id: user._id });
   };
 
   return (
@@ -194,7 +181,7 @@ const LeftSideBar = ({
                 style={{
                   marginRight: "1em",
                 }}
-                src={avatar}
+                src={user.avatar}
                 name="Emily"
                 status="available"
                 size="md"
@@ -309,7 +296,11 @@ const LeftSideBar = ({
                     setIsGroup(element.isGroup);
                   }}
                 >
-                  <Avatar src={avatar} name="Lilly" status="available" />
+                  <Avatar
+                    src={element.avatar}
+                    name="Lilly"
+                    status="available"
+                  />
                 </Conversation>
               ))}
             </ConversationList>
@@ -340,7 +331,11 @@ const LeftSideBar = ({
                       Add
                     </Button>
                   </Conversation.Operations>
-                  <Avatar src={avatar} name="Lilly" status="available" />
+                  <Avatar
+                    src={element.avatar}
+                    name="Lilly"
+                    status="available"
+                  />
                 </Conversation>
               ))}
             </ConversationList>
@@ -349,24 +344,6 @@ const LeftSideBar = ({
       )}
       {isNotification && (
         <div>
-          {/* <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "0.675em 0.8em 0.675em 0.8em",
-            }}
-          >
-            <Avatar
-              style={{
-                marginRight: "1em",
-              }}
-              src={avatar}
-              name="Emily"
-              status="available"
-              size="md"
-            />
-            <div>{user.username} da chap nhan loi moi ket ban cua ban</div>
-          </div> */}
           {notifications.map((e) => {
             if (e.type == 2) {
               return (
@@ -389,7 +366,7 @@ const LeftSideBar = ({
                       style={{
                         marginRight: "1em",
                       }}
-                      src={avatar}
+                      src={e.avatar}
                       name="Emily"
                       status="available"
                       size="md"
@@ -427,7 +404,7 @@ const LeftSideBar = ({
                     style={{
                       marginRight: "1em",
                     }}
-                    src={avatar}
+                    src={e.avatar}
                     name="Emily"
                     status="available"
                     size="md"

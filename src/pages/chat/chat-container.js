@@ -8,6 +8,9 @@ import {
   MessageList,
   VideoCallButton,
   VoiceCallButton,
+  InputToolbox,
+  SendButton,
+  AttachmentButton,
 } from "@chatscope/chat-ui-kit-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -18,12 +21,21 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import dateHelper from "../../util/date";
+import { GiCancel } from "react-icons/gi";
+import cancelIcon from "../../assets/avata.svg";
 
 const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
   const [messageInputValue, setMessageInputValue] = useState("");
   const [messages, setMessage] = useState([]);
   const [show, setShow] = useState(false);
   const [listFriendNotInGroup, setListFriendNotInGroup] = useState([]);
+  const [isFile, setIsFile] = useState(false);
+  const [file, setFile] = useState();
+  const [height, setHeight] = useState("570px");
+  const [info, setInfo] = useState({
+    username: "",
+    avatar: "",
+  });
 
   const handleClose = () => setShow(false);
   const handleShow = async () => {
@@ -80,7 +92,10 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
   }, [socket, chooseId, isGroup]);
 
   useEffect(() => {
-    getMessage();
+    if (chooseId) {
+      getMessage();
+      getInfo();
+    }
   }, [chooseId, isGroup]);
 
   const getMessage = async () => {
@@ -98,6 +113,40 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
 
       const message = await axios.request(config);
       setMessage(message.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getInfo = async () => {
+    try {
+      if (isGroup) {
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `http://localhost:5000/group/${chooseId}`,
+          headers: {},
+        };
+
+        const data = await axios.request(config);
+        setInfo({
+          name: data.data.name,
+          avatar: data.data.avatar,
+        });
+      } else {
+        let config = {
+          method: "get",
+          maxBodyLength: Infinity,
+          url: `http://localhost:5000/info/friend/${chooseId}`,
+          headers: {},
+        };
+
+        const data = await axios.request(config);
+        setInfo({
+          name: data.data.username,
+          avatar: data.data.avatar,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -125,20 +174,55 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
   };
 
   const handleSendMessage = () => {
+    console.log(file);
     if (!isGroup) {
       socket.emit("send-message-to-user", {
         creator: user._id,
         recipientId: chooseId,
         messageBody: messageInputValue,
+        isFile: isFile,
+        file: file,
+        metadata: isFile
+          ? {
+              name: file.name,
+              type: file.type,
+            }
+          : null,
       });
     } else {
       socket.emit("send-message-to-group", {
         creator: user._id,
         cecipientGroupId: chooseId,
         messageBody: messageInputValue,
+        isFile: isFile,
+        file: file,
+        metadata: isFile
+          ? {
+              name: file.name,
+              type: file.type,
+            }
+          : null,
       });
     }
+    if (isFile) {
+      setIsFile(false);
+      setFile(null);
+      setHeight("570px");
+    }
     setMessageInputValue("");
+  };
+
+  const handleAttackClick = () => {
+    let input = document.createElement("input");
+    input.type = "file";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      setFile(file);
+      setIsFile(true);
+      setMessageInputValue(file.name);
+      setHeight("530px");
+    };
+    input.click();
   };
 
   return (
@@ -212,11 +296,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
         <ChatContainer>
           <ConversationHeader>
             <ConversationHeader.Back />
-            <Avatar src={avatar} name="Zoe" />
-            <ConversationHeader.Content
-              userName="Zoe"
-              info="Active 10 mins ago"
-            />
+            <Avatar src={info.avatar} />
+            <ConversationHeader.Content userName={info.name} />
             <ConversationHeader.Actions>
               {isGroup && (
                 <BsPersonFillAdd
@@ -235,7 +316,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
           </ConversationHeader>
           <MessageList
             style={{
-              height: "570px",
+              // height: "570px",
+              height: height,
               overflow: "scroll",
             }}
           >
@@ -289,7 +371,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                         position: "single",
                       }}
                     >
-                      <Avatar src={avatar} name="Zoe" />
+                      <Avatar src={element.avatar} name="Zoe" />
                       <Message.Footer
                         sender={element.creator}
                         sentTime={dateHelper.formatTime(element.createdAt)}
@@ -313,12 +395,42 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
               }
             })}
           </MessageList>
+          {isFile && (
+            <InputToolbox>
+              <div>
+                <span
+                  style={{
+                    margin: "5px",
+                    padding: "5px",
+                    background: "#BDE7F6",
+                    borderRadius: "5px",
+                  }}
+                >
+                  {file.name}
+                </span>
+
+                <GiCancel
+                  color="red"
+                  onClick={() => {
+                    setIsFile(false);
+                    setFile(null);
+                    setHeight("570px");
+                    setMessageInputValue("");
+                  }}
+                />
+              </div>
+            </InputToolbox>
+          )}
 
           <MessageInput
             placeholder="Type message here"
             value={messageInputValue}
-            onChange={(val) => setMessageInputValue(val)}
+            activateAfterChange="true"
+            onChange={(val) => {
+              if (!isFile) setMessageInputValue(val);
+            }}
             onSend={handleSendMessage}
+            onAttachClick={handleAttackClick}
           />
         </ChatContainer>
       )}
