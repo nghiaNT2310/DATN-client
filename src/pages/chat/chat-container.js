@@ -65,6 +65,12 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
     let roomId;
     if (isGroup) {
       roomId = chooseId;
+      console.log("da vao ------------");
+      socket.emit("call-to-group", {
+        creator: user._id,
+        messageBody: chooseId,
+        cecipientGroupId: chooseId,
+      });
     } else {
       let config = {
         method: "get",
@@ -73,6 +79,11 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
         headers: {},
       };
       const friendId = await axios.request(config);
+      socket.emit("call-to-friend", {
+        creator: user._id,
+        messageBody: friendId.data,
+        recipientId: chooseId,
+      });
       roomId = friendId.data;
     }
     const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${roomId}`;
@@ -174,7 +185,6 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
   };
 
   const handleSendMessage = () => {
-    console.log(file);
     if (!isGroup) {
       socket.emit("send-message-to-user", {
         creator: user._id,
@@ -367,6 +377,30 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                         />
                       </Message>
                     );
+                  } else if (element.subject == "call") {
+                    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                    const html =
+                      "<a href=" +
+                      url +
+                      ' target="_blank" style="color:black;">' +
+                      '<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting</button>' +
+                      "</a>";
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent html={html} />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
                   } else {
                     return (
                       <Message
@@ -419,6 +453,26 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                           },
                         }}
                       ></Message>
+                    );
+                  } else if (element.subject == "call") {
+                    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                    const html =
+                      "<a href=" +
+                      url +
+                      ' target="_blank" style="color:black;">' +
+                      '<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting</button>' +
+                      "</a>";
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "outgoing",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent html={html} />
+                      </Message>
                     );
                   } else {
                     return (
@@ -486,6 +540,31 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                         />
                       </Message>
                     );
+                  } else if (element.subject == "call") {
+                    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                    const html =
+                      "<a href=" +
+                      url +
+                      ' target="_blank" style="color:black;">' +
+                      '<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting</button>' +
+                      "</a>";
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "single",
+                        }}
+                      >
+                        <Message.HtmlContent html={html} />
+                        <Avatar src={element.avatar} name="Zoe" />
+                        <Message.Footer
+                          sender={element.creator}
+                          sentTime={dateHelper.formatTime(element.createdAt)}
+                        />
+                      </Message>
+                    );
                   } else {
                     return (
                       <Message
@@ -541,6 +620,27 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
                         }}
                         avatarSpacer
                       ></Message>
+                    );
+                  } else if (element.subject == "call") {
+                    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                    const html =
+                      "<a href=" +
+                      url +
+                      ' target="_blank" style="color:black;">' +
+                      '<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting</button>' +
+                      "</a>";
+                    return (
+                      <Message
+                        model={{
+                          sentTime: "15 mins ago",
+                          sender: element.creator,
+                          direction: "incoming",
+                          position: "single",
+                        }}
+                        avatarSpacer
+                      >
+                        <Message.HtmlContent html={html} />
+                      </Message>
                     );
                   } else {
                     return (

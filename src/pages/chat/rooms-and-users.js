@@ -291,11 +291,15 @@ const LeftSideBar = ({
                   name={element.name}
                   lastSenderName={element.lastSenderName}
                   info={
-                    element.subject.includes("image")
+                    !element.subject
+                      ? "wait"
+                      : element.subject.includes("image")
                       ? "image"
                       : element.subject == "text"
                       ? element.message
-                      : "file"
+                      : element.subject == "file"
+                      ? "file"
+                      : "call"
                   }
                   lastActivityTime={
                     element.createdAt
