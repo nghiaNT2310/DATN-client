@@ -5,6 +5,6 @@ function formatTime(datestring) {
 
 function formatTimeToHM(datestring) {
   const date = new Date(datestring);
-  return `${date.getHours()}:${date.getMinutes()}`;
+  return `${date.getHours()}:${date.getMinutes()}  `;
 }
 module.exports = { formatTime, formatTimeToHM };

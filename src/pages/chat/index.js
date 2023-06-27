@@ -16,7 +16,7 @@ const Chat = ({ socket }) => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: "http://localhost:5000/user",
+        url: `${process.env.REACT_APP_ENDPOINT}/user`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

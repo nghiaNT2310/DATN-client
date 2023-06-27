@@ -64,7 +64,7 @@ const LeftSideBar = ({
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://localhost:5000/explore/?find=${search}`,
+        url: `${process.env.REACT_APP_ENDPOINT}/explore/?find=${search}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -121,7 +121,7 @@ const LeftSideBar = ({
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: "http://localhost:5000/notification",
+        url: `${process.env.REACT_APP_ENDPOINT}/notification`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -138,7 +138,7 @@ const LeftSideBar = ({
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "http://localhost:5000/message",
+      url: `${process.env.REACT_APP_ENDPOINT}/message`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -288,11 +288,12 @@ const LeftSideBar = ({
             >
               {lstConversation.map((element) => (
                 <Conversation
+                  unreadDot
                   name={element.name}
                   lastSenderName={element.lastSenderName}
                   info={
                     !element.subject
-                      ? "wait"
+                      ? ""
                       : element.subject.includes("image")
                       ? "image"
                       : element.subject == "text"
@@ -301,11 +302,11 @@ const LeftSideBar = ({
                       ? "file"
                       : "call"
                   }
-                  lastActivityTime={
-                    element.createdAt
-                      ? dateHelper.formatTimeToHM(element.createdAt)
-                      : dateHelper.formatTimeToHM(element.establishAt)
-                  }
+                  // lastActivityTime={
+                  //   element.createdAt
+                  //     ? dateHelper.formatTimeToHM(element.createdAt)
+                  //     : dateHelper.formatTimeToHM(element.establishAt)
+                  // }
                   onClick={async (e) => {
                     setChooseId(element.id);
                     setIsGroup(element.isGroup);

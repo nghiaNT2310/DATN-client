@@ -42,7 +42,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `http://localhost:5000/group-user/${chooseId}`,
+      url: `${process.env.REACT_APP_ENDPOINT}/group-user/${chooseId}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -75,7 +75,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
       let config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://localhost:5000/friend?id1=${user._id}&id2=${chooseId}`,
+        url: `${process.env.REACT_APP_ENDPOINT}/friend?id1=${user._id}&id2=${chooseId}`,
         headers: {},
       };
       const friendId = await axios.request(config);
@@ -114,13 +114,13 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
       const config = {
         method: "get",
         maxBodyLength: Infinity,
-        url: `http://localhost:5000/message/friend/${chooseId}`,
+        url: `${process.env.REACT_APP_ENDPOINT}/message/friend/${chooseId}`,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       };
       if (isGroup)
-        config.url = `http://localhost:5000/message/group/${chooseId}`;
+        config.url = `${process.env.REACT_APP_ENDPOINT}/message/group/${chooseId}`;
 
       const message = await axios.request(config);
       setMessage(message.data);
@@ -135,7 +135,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://localhost:5000/group/${chooseId}`,
+          url: `${process.env.REACT_APP_ENDPOINT}/group/${chooseId}`,
           headers: {},
         };
 
@@ -148,7 +148,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user }) => {
         let config = {
           method: "get",
           maxBodyLength: Infinity,
-          url: `http://localhost:5000/info/friend/${chooseId}`,
+          url: `${process.env.REACT_APP_ENDPOINT}/info/friend/${chooseId}`,
           headers: {},
         };
 

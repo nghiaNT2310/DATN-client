@@ -1,4 +1,4 @@
-const DOMAIN = "http://localhost:5000";
+const DOMAIN = process.env.REACT_APP_ENDPOINT;
 
 const PATH = {
   SIGN_IN: "/signin",

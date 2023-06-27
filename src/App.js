@@ -5,7 +5,7 @@ import Chat from "./pages/chat";
 import SignInForm from "./pages/login";
 import SignUpForm from "./pages/register";
 import VideoRoomComponent from "./pages/videoroom";
-const socket = io.connect("http://localhost:5000");
+const socket = io.connect(process.env.REACT_APP_ENDPOINT);
 function App() {
   return (
     <Router>

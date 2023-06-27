@@ -8,7 +8,9 @@ class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
     this.APPLICATION_SERVER_URL =
-      process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/";
+      process.env.NODE_ENV === "production"
+        ? ""
+        : `${process.env.REACT_APP_ENDPOINT}/`;
     // const APPLICATION_SERVER_URL =
     //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
     const urlParams = new URLSearchParams(window.location.search);
