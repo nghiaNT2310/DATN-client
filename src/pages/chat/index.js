@@ -61,6 +61,7 @@ const Chat = ({ socket }) => {
         />
 
         <MyChatContainer
+          setChooseId={setChooseId}
           socket={socket}
           chooseId={chooseId}
           isGroup={isGroup}

@@ -106,7 +106,21 @@ const LeftSideBar = ({
       ]);
     });
 
+    socket.on("be-removed-from-group-sidebar", (data) => {
+      console.log({
+        event: "be-removed-from-group",
+        data,
+      });
+      console.log(lstConversation);
+      setLstConversation((pre) => {
+        return pre.filter((e) => {
+          return !e.isGroup || e.id != data.groupId;
+        });
+      });
+    });
+
     return () => {
+      socket.off("be-removed-from-group-sidebar");
       socket.off("notification-add-friend");
       socket.off("notification-add-friend-cancel");
       socket.off("new-friend-conversation");
@@ -288,7 +302,6 @@ const LeftSideBar = ({
             >
               {lstConversation.map((element) => (
                 <Conversation
-                  unreadDot
                   name={element.name}
                   lastSenderName={element.lastSenderName}
                   info={
@@ -296,17 +309,17 @@ const LeftSideBar = ({
                       ? ""
                       : element.subject.includes("image")
                       ? "image"
-                      : element.subject == "text"
-                      ? element.message
                       : element.subject == "file"
                       ? "file"
-                      : "call"
+                      : element.subject == "call"
+                      ? "call"
+                      : element.message
                   }
-                  // lastActivityTime={
-                  //   element.createdAt
-                  //     ? dateHelper.formatTimeToHM(element.createdAt)
-                  //     : dateHelper.formatTimeToHM(element.establishAt)
-                  // }
+                  lastActivityTime={
+                    element.createdAt
+                      ? dateHelper.formatTimeToHM(element.createdAt)
+                      : dateHelper.formatTimeToHM(element.establishAt)
+                  }
                   onClick={async (e) => {
                     setChooseId(element.id);
                     setIsGroup(element.isGroup);
