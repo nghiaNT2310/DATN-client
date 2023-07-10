@@ -63,7 +63,7 @@ class VideoRoomComponent extends Component {
     const token = this.state.token;
     return (
       <div>
-        {mySessionId && (
+        {mySessionId && token && (
           <div id="session">
             <OpenViduSession
               id="opv-session"
