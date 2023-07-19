@@ -5,23 +5,16 @@ import Chat from "./pages/chat";
 import SignInForm from "./pages/login";
 import SignUpForm from "./pages/register";
 import VideoRoomComponent from "./pages/videoroom";
+//const socket = io.connect(process.env.REACT_APP_SOCKET);
 const socket = io.connect(process.env.REACT_APP_SOCKET);
+// const socket = io({
+//   server: process.env.REACT_APP_SOCKET,
+//   path: "/socket/",
+// });
 function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route
-          exact
-          path=""
-          element={
-            localStorage.getItem("token") ? (
-              <Chat socket={socket} />
-            ) : (
-              <Navigate replace to={"/login"} />
-            )
-          }
-        /> */}
-
         <Route path="chat" element={<Chat socket={socket} />} />
 
         <Route path="register" element={<SignUpForm />} />

@@ -112,7 +112,9 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
       });
       roomId = friendId.data;
     }
-    const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${roomId}`;
+    // const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${roomId}`;
+    const url = `${process.env.REACT_APP_LINKVIDEOCALL}/room?username=${user.username}&roomId=${roomId}`;
+
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -530,12 +532,14 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         </Message>
                       );
                     } else if (element.subject == "call") {
-                      const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      //const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      const url = `${process.env.REACT_APP_LINKVIDEOCALL}/room?username=${user.username}&roomId=${element.messageBody}`;
+
                       const html =
                         "<a href=" +
                         url +
                         ' target="_blank" style="color:black;">' +
-                        '<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting</button>' +
+                        `<button style="background-color:#8FA2D7;padding: 20px;text-align: center; margin: 4px 4px; cursor: pointer;border-radius: 12px;">Join the metting </button>` +
                         "</a>";
                       return (
                         <Message
@@ -607,7 +611,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         ></Message>
                       );
                     } else if (element.subject == "call") {
-                      const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      const url = `${process.env.REACT_APP_LINKVIDEOCALL}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      //const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
                       const html =
                         "<a href=" +
                         url +
@@ -693,7 +698,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         </Message>
                       );
                     } else if (element.subject == "call") {
-                      const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      const url = `${process.env.REACT_APP_LINKVIDEOCALL}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      //const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
                       const html =
                         "<a href=" +
                         url +
@@ -774,7 +780,8 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         ></Message>
                       );
                     } else if (element.subject == "call") {
-                      const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      const url = `${process.env.REACT_APP_LINKVIDEOCALL}/room?username=${user.username}&roomId=${element.messageBody}`;
+                      //const url = `${window.location.protocol}//${window.location.host}/room?username=${user.username}&roomId=${element.messageBody}`;
                       const html =
                         "<a href=" +
                         url +
