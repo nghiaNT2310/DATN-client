@@ -34,7 +34,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
   const [listUserInGroup, setListUserInGroup] = useState([]);
   const [isFile, setIsFile] = useState(false);
   const [file, setFile] = useState();
-  const [height, setHeight] = useState("570px");
+  const [height, setHeight] = useState("650px");
   const [info, setInfo] = useState({
     username: "",
     avatar: "",
@@ -120,6 +120,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
 
   useEffect(() => {
     socket.on("new-message-chat-container", (data) => {
+      console.log(`receive :${Date.now()}`);
       if (data.chooseId == chooseId && isGroup == data.isGroup) {
         setMessage((pre) => [...pre, data.message]);
       }
@@ -250,7 +251,9 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
   };
 
   const handleSendMessage = () => {
+    console.log(`send :${Date.now()}`);
     if (!isGroup) {
+      
       socket.emit("send-message-to-user", {
         creator: user._id,
         recipientId: chooseId,
@@ -282,7 +285,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
     if (isFile) {
       setIsFile(false);
       setFile(null);
-      setHeight("570px");
+      setHeight("650px");
     }
     setMessageInputValue("");
   };
@@ -295,7 +298,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
       setFile(file);
       setIsFile(true);
       setMessageInputValue(file.name);
-      setHeight("530px");
+      setHeight("620px");
     };
     input.click();
   };
@@ -304,13 +307,13 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Add Member</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Control type="text" placeholder="Search" autoFocus />
-            </Form.Group>
+            </Form.Group> */}
             <div
               style={{
                 overflowY: "scroll",
@@ -370,13 +373,13 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
 
       <Modal show={showManageGroup} onHide={handleCloseManageGroup}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Remove Member</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Control type="text" placeholder="Search" autoFocus />
-            </Form.Group>
+            </Form.Group> */}
             <div
               style={{
                 overflowY: "scroll",
@@ -471,12 +474,14 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                 />
               )}
 
-              <VoiceCallButton
+              {/* <VoiceCallButton
                 onClick={() => {
                   handleCallButton();
                 }}
-              />
-              <VideoCallButton />
+              /> */}
+              <VideoCallButton onClick={() => {
+                  handleCallButton();
+                }}/>
             </ConversationHeader.Actions>
           </ConversationHeader>
           <MessageList
@@ -488,7 +493,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
           >
             {messages.map((element, index) => {
               if (element.subject == "notification") {
-                return <MessageSeparator content={element.messageBody} />;
+                return <MessageSeparator key={index} content={element.messageBody} />;
               } else {
                 if (element.creator == user.username) {
                   if (
@@ -498,6 +503,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     if (element.subject == "text") {
                       return (
                         <Message
+                        key={index}
                           model={{
                             message: element.messageBody,
                             sentTime: "15 mins ago",
@@ -515,6 +521,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else if (element.subject.includes("image")) {
                       return (
                         <Message
+                        key={index}
                           type="image"
                           model={{
                             direction: "outgoing",
@@ -543,6 +550,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         "</a>";
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -560,6 +568,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else {
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -587,6 +596,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     if (element.subject == "text") {
                       return (
                         <Message
+                        key={index}
                           model={{
                             message: element.messageBody,
                             sentTime: "15 mins ago",
@@ -599,6 +609,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else if (element.subject.includes("image")) {
                       return (
                         <Message
+                        key={index}
                           type="image"
                           model={{
                             direction: "outgoing",
@@ -621,6 +632,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         "</a>";
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -634,6 +646,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else {
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -662,6 +675,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     if (element.subject == "text") {
                       return (
                         <Message
+                        key={index}
                           model={{
                             message: element.messageBody,
                             sentTime: "15 mins ago",
@@ -680,6 +694,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else if (element.subject.includes("image")) {
                       return (
                         <Message
+                        key={index}
                           type="image"
                           model={{
                             direction: "incoming",
@@ -708,6 +723,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         "</a>";
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -726,6 +742,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else {
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -754,6 +771,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     if (element.subject == "text") {
                       return (
                         <Message
+                        key={index}
                           model={{
                             message: element.messageBody,
                             sentTime: "15 mins ago",
@@ -767,6 +785,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else if (element.subject.includes("image")) {
                       return (
                         <Message
+                        key={index}
                           type="image"
                           model={{
                             direction: "incoming",
@@ -790,6 +809,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                         "</a>";
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -804,6 +824,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                     } else {
                       return (
                         <Message
+                        key={index}
                           model={{
                             sentTime: "15 mins ago",
                             sender: element.creator,
@@ -863,7 +884,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
                   onClick={() => {
                     setIsFile(false);
                     setFile(null);
-                    setHeight("570px");
+                    setHeight("650px");
                     setMessageInputValue("");
                   }}
                 />
@@ -874,7 +895,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
           <MessageInput
             placeholder="Type message here"
             value={messageInputValue}
-            activateAfterChange="true"
+            activateAfterChange={true}
             onChange={(val) => {
               if (!isFile) setMessageInputValue(val);
             }}

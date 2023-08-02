@@ -16,7 +16,7 @@ function SignIn({ socket }) {
   // User Login info
 
   const handleSubmit = async (event) => {
-    console.log(process.env);
+    
     //Prevent page reload
     try {
       event.preventDefault();

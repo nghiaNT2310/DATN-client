@@ -195,14 +195,13 @@ const LeftSideBar = ({
           }}
         >
           <div>
-            <label for="file-input">
+            <label >
               <Avatar
                 style={{
                   marginRight: "1em",
                 }}
                 src={user.avatar}
                 name="Emily"
-                status="available"
                 size="md"
               />
             </label>
@@ -300,9 +299,10 @@ const LeftSideBar = ({
               }}
               scrollable
             >
-              {lstConversation.map((element) => (
+              {lstConversation.map((element,index) => (
                 <Conversation
                   name={element.name}
+                  key={index}
                   lastSenderName={element.lastSenderName}
                   info={
                     !element.subject
@@ -328,7 +328,6 @@ const LeftSideBar = ({
                   <Avatar
                     src={element.avatar}
                     name="Lilly"
-                    status="available"
                   />
                 </Conversation>
               ))}
@@ -341,7 +340,7 @@ const LeftSideBar = ({
               }}
               scrollable
             >
-              {explore.map((element) => (
+              {explore.map((element,index) => (
                 <Conversation name={element.username} key={element.id}>
                   <Conversation.Operations visible>
                     <Button
@@ -363,7 +362,6 @@ const LeftSideBar = ({
                   <Avatar
                     src={element.avatar}
                     name="Lilly"
-                    status="available"
                   />
                 </Conversation>
               ))}
@@ -397,7 +395,6 @@ const LeftSideBar = ({
                       }}
                       src={e.avatar}
                       name="Emily"
-                      status="available"
                       size="md"
                     />
                     <div>{e.message}</div>
@@ -435,7 +432,6 @@ const LeftSideBar = ({
                     }}
                     src={e.avatar}
                     name="Emily"
-                    status="available"
                     size="md"
                   />
                   <div

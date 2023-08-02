@@ -8,7 +8,7 @@ class VideoRoomComponent extends Component {
   constructor(props) {
     super(props);
     this.APPLICATION_SERVER_URL =
-      process.env.NODE_ENV === "production" ? "" : "https://192.168.1.91/";
+      process.env.NODE_ENV === "production" ? "" : process.env.REACT_APP_CONNECTION;
     // : `${process.env.REACT_APP_ENDPOINT}/`;
     const urlParams = new URLSearchParams(window.location.search);
     const username = urlParams.get("username");
@@ -37,6 +37,9 @@ class VideoRoomComponent extends Component {
     this.setState({
       session: undefined,
     });
+    const url = `${process.env.REACT_APP_LINKVIDEOCALL}/thank`;
+
+    window.location.replace(url);
   }
 
   handlerErrorEvent() {
@@ -57,10 +60,11 @@ class VideoRoomComponent extends Component {
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
+    const session=this.state.session;
     const token = this.state.token;
     return (
       <div>
-        {mySessionId && token && (
+        {mySessionId && session&&token && (
           <div id="session">
             <OpenViduSession
               id="opv-session"
