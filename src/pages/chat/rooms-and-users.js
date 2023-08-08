@@ -166,6 +166,7 @@ const LeftSideBar = ({
   };
 
   const changeAvatar = async (e) => {
+    console.log("change avatar");
     const file = e.target.files[0];
     socket.emit("update-avatar", {
       name: file.name,
@@ -195,7 +196,7 @@ const LeftSideBar = ({
           }}
         >
           <div>
-            <label >
+            <label for="file-input" >
               <Avatar
                 style={{
                   marginRight: "1em",
