@@ -10,7 +10,8 @@ import VideoRoomComponent from "./pages/videocall/components/VideoRoomComponent"
 //const socket = io.connect(process.env.REACT_APP_SOCKET);
 //const socket = io.connect(process.env.REACT_APP_SOCKET);
 const socket = io(process.env.REACT_APP_LINKVIDEOCALL, {
-  path: "/test/"
+  path: "/test/",
+  query: {token:localStorage.getItem("token")}
 });
 // const socket = io({
 //   server: process.env.REACT_APP_SOCKET,

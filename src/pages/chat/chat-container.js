@@ -896,6 +896,7 @@ const MyChatContainer = ({ socket, chooseId, isGroup, user, setChooseId }) => {
             placeholder="Type message here"
             value={messageInputValue}
             activateAfterChange={true}
+            sendDisabled={false}
             onChange={(val) => {
               if (!isFile) setMessageInputValue(val);
             }}
