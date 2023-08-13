@@ -7,21 +7,21 @@ import SignUpForm from "./pages/register";
 //import VideoRoomComponent from "./pages/videoroom";
 import ThankPage from "./pages/thankyou";
 import VideoRoomComponent from "./pages/videocall/components/VideoRoomComponent";
-//const socket = io.connect(process.env.REACT_APP_SOCKET);
-//const socket = io.connect(process.env.REACT_APP_SOCKET);
-const socket = io(process.env.REACT_APP_LINKVIDEOCALL, {
-  path: "/test/",
-  query: {token:localStorage.getItem("token")}
-});
-// const socket = io({
-//   server: process.env.REACT_APP_SOCKET,
-//   path: "/socket/",
+import { useEffect, useState } from "react";
+
+// const socket = io(process.env.REACT_APP_LINKVIDEOCALL, {
+//   path: "/test/",
+//   query: {token:localStorage.getItem("token")}
 // });
 function App() {
+
+  //const [token, setToken] = useState(null);
   return (
     <Router>
       <Routes>
-        <Route path="chat" element={<Chat socket={socket} />} />
+        {/* <Route path="chat" element={<Chat socket={socket} />} /> */}
+
+        <Route path="chat" element={<Chat />} />
 
         <Route path="register" element={<SignUpForm />} />
 
@@ -30,7 +30,7 @@ function App() {
 
         <Route path="thank" element={<ThankPage />} />
 
-        <Route path="" element={<SignInForm socket={socket} />} />
+        <Route path="" element={<SignInForm />} />
       </Routes>
     </Router>
   );

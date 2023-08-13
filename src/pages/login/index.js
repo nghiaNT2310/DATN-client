@@ -6,7 +6,7 @@ import { DOMAIN, PATH } from "../../const/url";
 
 import "./styles.css";
 
-function SignIn({ socket }) {
+function SignIn() {
   // React States
   const navigate = useNavigate();
   const [errorMessages, setErrorMessages] = useState({});
@@ -28,6 +28,10 @@ function SignIn({ socket }) {
         setErrorMessages({ name: "username", message: response.data.message });
         return;
       }
+      if (response.data.code === 405) {
+        setErrorMessages({ name: "username", message: response.data.message });
+        return;
+      }
 
       if (response.data.code === 4) {
         setErrorMessages({ name: "password", message: response.data.message });
@@ -35,6 +39,7 @@ function SignIn({ socket }) {
       }
 
       localStorage.setItem("token", response.data.result.token);
+
       navigate("/chat", { replace: true });
       return;
     } catch (error) {

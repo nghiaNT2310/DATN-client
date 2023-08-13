@@ -5,14 +5,26 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useEffect, useState } from "react";
 import MyChatContainer from "./chat-container";
 import LeftSideBar from "./rooms-and-users";
+import io from "socket.io-client"; // Add this
 
-const Chat = ({ socket }) => {
+// const socket = io(process.env.REACT_APP_LINKVIDEOCALL, {
+//   path: "/test/",
+//   query: {token:localStorage.getItem("token")}
+// });
+
+//const Chat = ({ socket }) => {
+  const Chat = () => {
   const [chooseId, setChooseId] = useState("");
   const [isGroup, setIsGroup] = useState(true);
   const [user, setUser] = useState({});
-
+  const [socket]=useState(io(process.env.REACT_APP_LINKVIDEOCALL, {
+      path: "/test/",
+      query: {token:localStorage.getItem("token")}
+    }))
   const getMyInfo = async () => {
     try {
+
+      console.log("bbbbbbb")
       let config = {
         method: "get",
         maxBodyLength: Infinity,
@@ -23,6 +35,7 @@ const Chat = ({ socket }) => {
       };
 
       const myInfo = await axios.request(config);
+
       socket.emit("register-socket-id", myInfo.data._id);
       setUser(myInfo.data);
     } catch (err) {
@@ -30,16 +43,31 @@ const Chat = ({ socket }) => {
     }
   };
   useEffect(() => {
-    getMyInfo();
+    window.onunload = async()=>{
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `${process.env.REACT_APP_ENDPOINT}/logout`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+      
+      await axios.request(config)
+      localStorage.removeItem("token");
+    }
   }, []);
 
   useEffect(() => {
+    getMyInfo();
+
     socket.on("update-avatar", () => {
       getMyInfo();
     });
 
     return () => {
       socket.off("update-avatar");
+      socket.disconnect()
     };
   }, [socket]);
 

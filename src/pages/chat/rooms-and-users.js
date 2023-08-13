@@ -252,7 +252,18 @@ const LeftSideBar = ({
             <AiOutlineLogout
               size={30}
               color="#6ea9d7"
-              onClick={() => {
+              onClick={async() => {
+                
+                let config = {
+                  method: 'get',
+                  maxBodyLength: Infinity,
+                  url: `${process.env.REACT_APP_ENDPOINT}/logout`,
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                };
+                
+                await axios.request(config)
                 localStorage.removeItem("token");
                 navigate("/", { replace: true });
               }}
